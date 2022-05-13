@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Post>
+@{
+    ViewData["Title"] = "Index";
+}
+<a asp-action="Create">Create a Post</a>
+
+<h2>Here is the list of Post method</h2>
+<table style="width:50%">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Text</th>
+            <th>DateTimeCreated</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+     <tbody>
+        @foreach (Post e in Model)
+        {
+            <tr>
+                <td>@e.Id</td>
+                <td>@e.Title</td>
+                <td>@e.Text</td>
+                <td>@e.DateCreated</td>
+                <td><a asp-action="Update" asp-route-etitle="@e.Title">Update</a></td>
+                <td>
+                      <form asp-route-emptitle="@e.Title" asp-action="Delete" method="post">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

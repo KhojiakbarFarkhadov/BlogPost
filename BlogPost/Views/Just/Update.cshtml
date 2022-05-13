@@ -1,0 +1,21 @@
+﻿@model Post
+@{
+    ViewData["Title"] = "Update";
+}
+<a asp-action="Index">View All Posts</a>
+<h2>Update</h2>
+<form method="post">
+    <p>
+        <label asp-for="Title">Title:</label>
+        <input asp-for="Title" />
+    </p>
+    <p>
+           <label asp-for="Text">Text:</label>
+        <input asp-for="Text" />
+    </p>
+    <p>
+    <p>
+        <input asp-for="DateCreated" asp-format="{0:dd/MM/yyyy}" class="form-control" />
+    </p>
+    <p><button type="submit">Submit</button></p>
+</form>
