@@ -1,25 +1,17 @@
-﻿@*@{
-    ViewData["Title"] = "Home Page";
-}
-*@
-@*<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+﻿@model IEnumerable<BlogPost.Models.Post>
 
-*@
-
-@model IEnumerable<BlogPost.Models.Post>
 @{
     ViewData["Title"] = "Index";
 }
 
+<h1>GetAllPost</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
@@ -31,4 +23,19 @@
             </th>
         </tr>
     </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+        </tr>
+}
+    </tbody>
 </table>
