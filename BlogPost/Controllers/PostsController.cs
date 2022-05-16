@@ -22,9 +22,9 @@ namespace BlogPost.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-              return _context.Posts != null ? 
-                          View(await _context.Posts.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
+            var posts = await _context.Posts.ToListAsync();
+
+            return View(posts);
         }
 
         // GET: Posts/Details/5
@@ -161,3 +161,5 @@ namespace BlogPost.Controllers
         }
     }
 }
+
+
