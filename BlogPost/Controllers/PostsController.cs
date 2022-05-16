@@ -25,16 +25,6 @@ namespace BlogPost.Controllers
             var posts = await _context.Posts.ToListAsync();
 
             return View(posts);
-
-              //return _context.Posts != null ? 
-              //            View(await _context.Posts.ToListAsync()) :
-              //            Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
-        }
-
-        public async Task<IActionResult> GetAllPost()
-        {
-            var posts = await _context.Posts.OrderByDescending(x => x.DateCreated).Take(8).ToListAsync();
-            return View(posts);
         }
 
         // GET: Posts/Details/5

@@ -10,7 +10,7 @@ namespace BlogPost.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
-        public HomeController(ApplicationDbContext context,ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
         {
             _logger = logger;
             _context = context;
