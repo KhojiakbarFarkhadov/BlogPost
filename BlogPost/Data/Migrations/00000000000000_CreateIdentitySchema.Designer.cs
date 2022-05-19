@@ -10,7 +10,7 @@ using System;
 namespace BlogPost.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("00000000000000_CreateIdentitySchema")]
+    [Migration("00000000000000_CreateSchema")]
     partial class CreateIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
