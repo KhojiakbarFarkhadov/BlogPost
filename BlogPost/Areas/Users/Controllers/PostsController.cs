@@ -9,6 +9,8 @@ using BlogPost.Data;
 using BlogPost.Models;
 using BlogPost.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlogPost.Areas.Users.Controllers
 {
@@ -21,12 +23,16 @@ namespace BlogPost.Areas.Users.Controllers
         {
             _context = context;
         }
-
+        
         // GET: Users/User
         public async Task<IActionResult> Index()
         {
-            var posts = await _context.Posts.OrderByDescending(x => x.DateCreated).Take(8).ToListAsync();
-            return View(posts);
+            var curUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var model = await _context.Posts
+                            .Where(a => a.AuthorId == curUserID)
+                            .ToListAsync();
+            return View(model);
         }
 
         // GET: Users/User/Details/5
@@ -59,21 +65,23 @@ namespace BlogPost.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Title,Text,DateCreated")] Post postsVM)
+        public async Task<IActionResult> Create([Bind("Id,Title,Text,DateCreated,AuthorId")] PostCreateVM postVM)
         {
             if (ModelState.IsValid)
             {
-                //var post = new Post();
-                //post.Title = postVM.Title;
-                //post.Text = postVM.Text;
-                postsVM.DateCreated = DateTime.Now;
+                var curUserID = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var post = new Post();
+                post.Title = postVM.Title;
+                post.Text = postVM.Text;
+                post.DateCreated = DateTime.Now;
+                post.AuthorId = curUserID; 
 
-                _context.Add(postsVM);
+                _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(postsVM);
+            return View(postVM);
         }
 
         // GET: Users/User/Edit/5

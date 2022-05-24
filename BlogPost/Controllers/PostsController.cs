@@ -9,6 +9,7 @@ using BlogPost.Data;
 using BlogPost.Models;
 using Microsoft.AspNetCore.Authorization;
 using BlogPost.ViewModels;
+using System.Security.Claims;
 
 namespace BlogPost.Controllers
 {
