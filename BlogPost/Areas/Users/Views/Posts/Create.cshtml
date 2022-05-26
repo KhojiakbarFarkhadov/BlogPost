@@ -6,7 +6,7 @@
 
 <h1>Create</h1>
 
-<h4>Post</h4>
+<h4>UserPost</h4>
 <hr />
 
 <div class="row">
@@ -25,10 +25,10 @@
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
             <div class="form-group" style="float:left;">
-                <input type="submit" value="Create" class="btn btn-primary" name="createInput" id="btn1" />
+                <input type="submit" value="Publish" class="btn btn-primary" name="createInput" actionType="Create"/>
             </div>
              <div class="form-group" style="float:left; margin-left:25px;">
-                <input type="submit" value="Save As Draft" class="btn btn-primary" name="saveInput" id="btn2"/>
+                <input type="submit" value="Save As Draft" class="btn btn-primary" name="saveInput" actionType="Draft"/>
             </div>
         </form>
     </div>
@@ -40,21 +40,16 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-@*
+
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script>
         $(document).ready(function(){
-             $("form").submit(function () {
-        // Get the submit button element
-        //var btn = $(this).find("input[type=submit]");
-                  if("input[type=submit][name=createInput]")
-                  {
-                      alert("Created");
-                  }
-                  else if("input[type=submit][name=saveInput]"){
-                      alert("Save as Draft")
-                  }
-           });
+               $("form input[type=submit]").click(function (ev) {
+               var clickedButtonActionType = $(this).attr("actiontype");
+                
+                $("form input#PostType").val(clickedButtonActionType);
+                alert(clickedButtonActionType);
+               });
         });
-</script>*@
+     </script>
 }

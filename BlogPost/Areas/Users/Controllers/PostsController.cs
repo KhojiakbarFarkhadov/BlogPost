@@ -65,7 +65,7 @@ namespace BlogPost.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Title,Text,DateCreated,AuthorId,Status")] PostCreateVM postVM)
+        public async Task<IActionResult> Create(/*[Bind("Id,Title,Text,DateCreated,AuthorId,Status,PostType")]*/ PostCreateVM postVM)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace BlogPost.Areas.Users.Controllers
                 }
                 else
                 {
-                    post.Status = "Created";
+                    post.Status = "Waiting for approval";
                 }
               
                 _context.Add(post);
@@ -115,7 +115,7 @@ namespace BlogPost.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,DateCreated,AuthorId,Status")] Post post)
+        public async Task<IActionResult> Edit(int id,/* [Bind("Id,Title,Text,DateCreated,AuthorId,Status,PostType")]*/ Post post)
         {
             if (id != post.Id)
             {
@@ -126,17 +126,24 @@ namespace BlogPost.Areas.Users.Controllers
             {
                 var curUserID = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 post.AuthorId = curUserID;
-                post.Status = "Draft";
                 post.DateCreated = DateTime.Now;
+                if (post.Status == "Draft")
+                {
+                    post.Status = "Draft";
+                }
+                else
+                {
+                    post.Status = "Waiting for approval";
+                }
 
                 try
                 {
                     _context.Update(post);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();  
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PostExists(post.Id))
+                    if (!PostExists(post.Id) )
                     {
                         return NotFound();
                     }
