@@ -18,7 +18,7 @@ namespace BlogPost.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var posts = await _context.Posts.OrderByDescending(x => x.DateCreated).Take(8).ToListAsync();
+            var posts = await _context.Posts.Where(x => x.Status == "Approved").OrderByDescending(x => x.DateCreated).Take(8).ToListAsync();
             return View(posts);
         }
         public IActionResult Privacy()

@@ -65,7 +65,7 @@ namespace BlogPost.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Title,Text,DateCreated,AuthorId")] PostCreateVM postVM)
+        public async Task<IActionResult> Create([Bind("Id,Title,Text,DateCreated,AuthorId,Status")] PostCreateVM postVM)
         {
             if (ModelState.IsValid)
             {
@@ -74,8 +74,16 @@ namespace BlogPost.Areas.Users.Controllers
                 post.Title = postVM.Title;
                 post.Text = postVM.Text;
                 post.DateCreated = DateTime.Now;
-                post.AuthorId = curUserID; 
-
+                post.AuthorId = curUserID;
+                if(postVM.PostType == "Draft")
+                {
+                    post.Status = "Draft";
+                }
+                else
+                {
+                    post.Status = "Created";
+                }
+              
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -107,7 +115,7 @@ namespace BlogPost.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,DateCreated")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,DateCreated,AuthorId,Status")] Post post)
         {
             if (id != post.Id)
             {
@@ -116,6 +124,9 @@ namespace BlogPost.Areas.Users.Controllers
 
             if (ModelState.IsValid)
             {
+                var curUserID = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                post.AuthorId = curUserID;
+                post.Status = "Draft";
                 post.DateCreated = DateTime.Now;
 
                 try

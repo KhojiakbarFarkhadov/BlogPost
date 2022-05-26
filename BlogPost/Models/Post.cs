@@ -15,5 +15,6 @@ namespace BlogPost.Models
         [ForeignKey("Author")]
         public string? AuthorId { get; set; }
         public ApplicationUser? Author { get; set; }
+        public string? Status { get; set; }
     }
 }
