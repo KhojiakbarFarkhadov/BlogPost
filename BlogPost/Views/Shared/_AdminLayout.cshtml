@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BlogPost</title>
+    <title>@ViewData["Title"] - Admin Area</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BlogPost.styles.css" asp-append-version="true" />
@@ -28,18 +28,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index">Posts</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Users" asp-controller="Posts" asp-action="Index">User Posts</a>
-                            </li>
-                        }
-                        @if(User.IsInRole("Administrator"))
-                        {
-                         <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">Admin</a>
-                         </li>
-                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
