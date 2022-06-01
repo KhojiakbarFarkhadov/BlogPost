@@ -2,11 +2,12 @@
 
 @{
     ViewData["Title"] = "Details";
-    Layout = "Admin";
+    Layout = "_AdminLayout";
+    int bla = Model.Id;
 }
 
-<h1>Details</h1>
-
+<h1>Admin Details</h1>
+@if (User.IsInRole("Administrator"));
 <div>
     <h4>Post</h4>
     <hr />
@@ -44,6 +45,59 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+    <br />
+     <div class="form-group" style="float:left;">
+         @*<button class="btn btn-primary" onclick="Approve(@Model.Id);">Approve</button>*@
+            <input type="submit" value="Approve" class="btn btn-primary" actionType="Approved" id="btn"/>
+     </div>
+     <div class="form-group" style="float:left; margin-left:25px;">
+            <input type="submit" value="Reject It" class="btn btn-primary" actionType="Rejected" id="btn"/>
+    </div>
+
+
 </div>
+        
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+     <script src="~/lib/jquery/dist/jquery.js"></script>
+    @*<script>
+           $(document).ready(function(){
+               $("div input[type=Submit]").click(function (ev) {
+               var ClickedButton = $(this).attr("actiontype");
+                   $(this).attr('value', ClickedButton);
+                   $(this).attr("disabled","true");
+                $("div input#PostType").val(ClickedButton);
+            });
+        });   
+    </script>*@
+     
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+         $(document).ready(function(){
+            $("div input[type=Submit]").click(function (ev) {
+                var ClickedButton = $(this).attr("actiontype");
+                    $(this).attr('value', ClickedButton);
+                    $(this).attr("disabled","true");
+                $("div input#PostType").val(ClickedButton);
+
+                $.ajax({
+                    url: "@Url.Action("Approve")",
+                    type: "POST",
+                    data: { id : @Model.Id},
+                    async: true,
+                    success: function (data) {
+                        console.log(data);
+                    }, 
+                    error: function (data) {
+                        console.log("That was an error");
+                    }
+                });
+            });
+
+            
+        });
+    </script>
+}

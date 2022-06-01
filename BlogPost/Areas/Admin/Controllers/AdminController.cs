@@ -36,7 +36,6 @@ namespace BlogPost.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
             var post = await _context.Posts
                 .Include(p => p.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -45,6 +44,28 @@ namespace BlogPost.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            return View(post);
+        }
+
+        // GET: Admin/Admin/Approve/5
+        //[HttpPost]
+        public async Task <IActionResult> Approve(int? id)
+        {
+            if (id == null || _context.Posts == null)
+            {
+                return NotFound();
+            }
+            var post = await _context.Posts
+                .Include(p => p.Author)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Status = "Approved";
+            _context.SaveChangesAsync();
+            
             return View(post);
         }
     }

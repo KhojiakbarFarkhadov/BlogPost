@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 namespace BlogPost.Areas.Users.Controllers
 {
     [Area("Users")]
+    [Authorize(Roles = "User")]
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
