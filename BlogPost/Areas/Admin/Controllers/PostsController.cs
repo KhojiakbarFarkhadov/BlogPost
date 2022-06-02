@@ -29,7 +29,7 @@ namespace BlogPost.Areas.Admin.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Admin/Admin/Details/5
+        // GET: Admin/Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Posts == null)
@@ -47,7 +47,7 @@ namespace BlogPost.Areas.Admin.Controllers
             return View(post);
         }
 
-        // POST: Admin/Admin/Approve/5
+        // POST: Admin/Posts/Approve/5
         //[HttpPost]
         public async Task <IActionResult> Approve(int? id)
         {
@@ -64,13 +64,13 @@ namespace BlogPost.Areas.Admin.Controllers
             }
 
             post.Status = "Approved";
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             
-            return View(post);
+            return Ok();
         }
 
 
-        // POST: Admin/Admin/Reject/5
+        // POST: Admin/Posts/Reject/5
         //[HttpPost]
         public async Task<IActionResult> Reject(int? id)
         {
@@ -87,9 +87,9 @@ namespace BlogPost.Areas.Admin.Controllers
             }
 
             post.Status = "Rejected";
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            return View(post);
+            return Ok();
         }
     }
 }

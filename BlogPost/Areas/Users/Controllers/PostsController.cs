@@ -136,7 +136,6 @@ namespace BlogPost.Areas.Users.Controllers
                 {
                     post.Status = "Waiting for approval";
                 }
-
                 try
                 {
                     _context.Update(post);
@@ -144,7 +143,7 @@ namespace BlogPost.Areas.Users.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PostExists(post.Id) )
+                    if (!PostExists(post.Id))
                     {
                         return NotFound();
                     }
