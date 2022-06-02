@@ -25,8 +25,8 @@ namespace BlogPost.Areas.Admin.Controllers
         // GET: Admin/Admin
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Posts.Include(p => p.Author);
-            return View(await applicationDbContext.ToListAsync());
+            var posts = _context.Posts.Include(p => p.Author);
+            return View(await posts.ToListAsync());
         }
 
         // GET: Admin/Posts/Details/5
