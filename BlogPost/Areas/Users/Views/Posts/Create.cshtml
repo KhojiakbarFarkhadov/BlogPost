@@ -1,4 +1,4 @@
-﻿@model BlogPost.Models.Post
+﻿@model BlogPost.ViewModels.PostCreateVM
 
 @{
     ViewData["Title"] = "Create";
@@ -6,12 +6,14 @@
 
 <h1>Create</h1>
 
-<h4>Post</h4>
+<h4>UserPost</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PostType">
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -22,8 +24,11 @@
                 <input asp-for="Text" class="form-control" />
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group" style="float:left;">
+                <input type="submit" value="Publish" class="btn btn-primary" name="createInput" actionType="Create"/>
+            </div>
+             <div class="form-group" style="float:left; margin-left:25px;">
+                <input type="submit" value="Save As Draft" class="btn btn-primary" name="saveInput" actionType="Draft"/>
             </div>
         </form>
     </div>
@@ -35,4 +40,15 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+        $(document).ready(function(){
+               $("form input[type=submit]").click(function (ev) {
+               var clickedButtonActionType = $(this).attr("actiontype");
+                
+                $("form input#PostType").val(clickedButtonActionType);
+               });
+        });
+     </script>
 }

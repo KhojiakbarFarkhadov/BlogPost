@@ -11,5 +11,10 @@ namespace BlogPost.Models
         public string Text { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime DateCreated { get; set; }
+
+        [ForeignKey("Author")]
+        public string? AuthorId { get; set; }
+        public ApplicationUser? Author { get; set; }
+        public string? Status { get; set; }
     }
 }

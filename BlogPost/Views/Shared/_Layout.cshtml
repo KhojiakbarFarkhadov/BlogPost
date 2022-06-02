@@ -28,11 +28,17 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index">Posts</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)
+                        @if ((User.IsInRole("User")))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Users" asp-controller="Posts" asp-action="Index">User Posts</a>
                             </li>
+                        }
+                        @if(User.IsInRole("Administrator"))
+                        {
+                         <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">Admin</a>
+                         </li>
                         }
                     </ul>
                     <partial name="_LoginPartial" />

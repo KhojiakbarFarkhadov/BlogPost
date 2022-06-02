@@ -9,6 +9,7 @@ using BlogPost.Data;
 using BlogPost.Models;
 using Microsoft.AspNetCore.Authorization;
 using BlogPost.ViewModels;
+using System.Security.Claims;
 
 namespace BlogPost.Controllers
 {
@@ -24,9 +25,12 @@ namespace BlogPost.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            var posts = await _context.Posts.ToListAsync();
+            var curUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return View(posts);
+            var model = await _context.Posts
+                            .Where(a => a.AuthorId == curUserID)
+                            .ToListAsync();
+            return View(model);
         }
 
         // GET: Posts/Details/5

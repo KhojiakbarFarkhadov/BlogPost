@@ -9,10 +9,13 @@ using BlogPost.Data;
 using BlogPost.Models;
 using BlogPost.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlogPost.Areas.Users.Controllers
 {
     [Area("Users")]
+    [Authorize(Roles = "User")]
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,12 +24,16 @@ namespace BlogPost.Areas.Users.Controllers
         {
             _context = context;
         }
-
+        
         // GET: Users/User
         public async Task<IActionResult> Index()
         {
-            var posts = await _context.Posts.OrderByDescending(x => x.DateCreated).Take(8).ToListAsync();
-            return View(posts);
+            var curUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var model = await _context.Posts
+                            .Where(a => a.AuthorId == curUserID)
+                            .ToListAsync();
+            return View(model);
         }
 
         // GET: Users/User/Details/5
@@ -59,21 +66,31 @@ namespace BlogPost.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Title,Text,DateCreated")] Post postsVM)
+        public async Task<IActionResult> Create(/*[Bind("Id,Title,Text,DateCreated,AuthorId,Status,PostType")]*/ PostCreateVM postVM)
         {
             if (ModelState.IsValid)
             {
-                //var post = new Post();
-                //post.Title = postVM.Title;
-                //post.Text = postVM.Text;
-                postsVM.DateCreated = DateTime.Now;
-
-                _context.Add(postsVM);
+                var curUserID = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var post = new Post();
+                post.Title = postVM.Title;
+                post.Text = postVM.Text;
+                post.DateCreated = DateTime.Now;
+                post.AuthorId = curUserID;
+                if(postVM.PostType == "Draft")
+                {
+                    post.Status = "Draft";
+                }
+                else
+                {
+                    post.Status = "Waiting for approval";
+                }
+              
+                _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(postsVM);
+            return View(postVM);
         }
 
         // GET: Users/User/Edit/5
@@ -99,7 +116,7 @@ namespace BlogPost.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,DateCreated")] Post post)
+        public async Task<IActionResult> Edit(int id,/* [Bind("Id,Title,Text,DateCreated,AuthorId,Status,PostType")]*/ Post post)
         {
             if (id != post.Id)
             {
@@ -108,12 +125,21 @@ namespace BlogPost.Areas.Users.Controllers
 
             if (ModelState.IsValid)
             {
+                var curUserID = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                post.AuthorId = curUserID;
                 post.DateCreated = DateTime.Now;
-
+                if (post.Status == "Draft")
+                {
+                    post.Status = "Draft";
+                }
+                else
+                {
+                    post.Status = "Waiting for approval";
+                }
                 try
                 {
                     _context.Update(post);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();  
                 }
                 catch (DbUpdateConcurrencyException)
                 {
