@@ -1,5 +1,6 @@
 using BlogPost.Data;
 using BlogPost.Models;
+using BlogPost.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -20,6 +21,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<PostsService, PostsService>();
 
 var app = builder.Build();
 

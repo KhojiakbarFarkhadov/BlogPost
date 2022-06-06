@@ -10,16 +10,19 @@ using BlogPost.Models;
 using Microsoft.AspNetCore.Authorization;
 using BlogPost.ViewModels;
 using System.Security.Claims;
+using BlogPost.Services;
 
 namespace BlogPost.Controllers
 {
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly PostsService _postsService;
 
-        public PostsController(ApplicationDbContext context)
+        public PostsController(ApplicationDbContext context, PostsService postsService)
         {
             _context = context;
+            _postsService = postsService;
         }
 
         // GET: Posts
@@ -41,8 +44,8 @@ namespace BlogPost.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = _postsService.GetById(id.Value);
+
             if (post == null)
             {
                 return NotFound();

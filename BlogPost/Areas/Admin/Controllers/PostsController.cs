@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BlogPost.Data;
 using BlogPost.Models;
 using Microsoft.AspNetCore.Authorization;
+using BlogPost.Services;
 
 namespace BlogPost.Areas.Admin.Controllers
 {
@@ -16,11 +17,14 @@ namespace BlogPost.Areas.Admin.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly PostsService _postsService;
 
-        public AdminController(ApplicationDbContext context)
+         public AdminController(ApplicationDbContext context, PostsService postsService)
         {
             _context = context;
+            _postsService = postsService;
         }
+
 
         // GET: Admin/Admin
         public async Task<IActionResult> Index()
@@ -32,17 +36,7 @@ namespace BlogPost.Areas.Admin.Controllers
         // GET: Admin/Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
-            var post = await _context.Posts
-                .Include(p => p.Author)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+            var post = _postsService.GetById(id.Value);
 
             return View(post);
         }
@@ -55,9 +49,9 @@ namespace BlogPost.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var post = await _context.Posts
-                .Include(p => p.Author)
-                .FirstOrDefaultAsync(m => m.Id == id);
+           
+            var post = _postsService.Approve(id.Value);
+            
             if (post == null)
             {
                 return NotFound();
@@ -65,7 +59,7 @@ namespace BlogPost.Areas.Admin.Controllers
 
             post.Status = "Approved";
             await _context.SaveChangesAsync();
-            
+
             return Ok();
         }
 
@@ -78,9 +72,9 @@ namespace BlogPost.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var post = await _context.Posts
-                .Include(p => p.Author)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            
+            var post = _postsService.Reject(id.Value);
+           
             if (post == null)
             {
                 return NotFound();
