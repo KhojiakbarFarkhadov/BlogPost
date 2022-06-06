@@ -1,6 +1,7 @@
 using BlogPost.Data;
 using BlogPost.Models;
 using BlogPost.Services;
+using BlogPost.Services.Posts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -23,6 +24,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<PostsService, PostsService>();
+builder.Services.AddTransient<AdminPostsService, AdminPostsService>();
 
 var app = builder.Build();
 

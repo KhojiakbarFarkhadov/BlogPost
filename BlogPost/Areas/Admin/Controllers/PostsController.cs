@@ -9,6 +9,7 @@ using BlogPost.Data;
 using BlogPost.Models;
 using Microsoft.AspNetCore.Authorization;
 using BlogPost.Services;
+using BlogPost.Services.Posts;
 
 namespace BlogPost.Areas.Admin.Controllers
 {
@@ -18,11 +19,13 @@ namespace BlogPost.Areas.Admin.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly PostsService _postsService;
+        private readonly AdminPostsService _adminPostsService;
 
-         public AdminController(ApplicationDbContext context, PostsService postsService)
+         public AdminController(ApplicationDbContext context, PostsService postsService, AdminPostsService adminPostsService)
         {
             _context = context;
             _postsService = postsService;
+            _adminPostsService = adminPostsService;
         }
 
 
@@ -50,7 +53,7 @@ namespace BlogPost.Areas.Admin.Controllers
                 return NotFound();
             }
            
-            var post = _postsService.Approve(id.Value);
+            var post = _adminPostsService.Approve(id.Value);
             
             if (post == null)
             {
@@ -73,7 +76,7 @@ namespace BlogPost.Areas.Admin.Controllers
                 return NotFound();
             }
             
-            var post = _postsService.Reject(id.Value);
+            var post = _adminPostsService.Reject(id.Value);
            
             if (post == null)
             {

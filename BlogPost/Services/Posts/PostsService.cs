@@ -1,6 +1,5 @@
 ﻿using BlogPost.Data;
 using BlogPost.Models;
-using BlogPost.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogPost.Services
@@ -28,24 +27,6 @@ namespace BlogPost.Services
              _context.SaveChanges();
 
             return post; 
-        }
-
-        public Post Approve(int id)
-        {
-            var post = _context.Posts
-                .Include(p => p.Author)
-                .FirstOrDefault(m => m.Id == id);
-          
-            return post;
-        }
-
-        public Post Reject(int? id)
-        {
-            var post = _context.Posts
-                .Include(p => p.Author)
-                .FirstOrDefault(m => m.Id == id);
-
-            return post;
         }
 
         public Post Create(Post post)
