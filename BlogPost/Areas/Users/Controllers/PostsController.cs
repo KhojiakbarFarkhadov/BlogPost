@@ -19,11 +19,9 @@ namespace BlogPost.Areas.Users.Controllers
     [Authorize(Roles = "User")]
     public class PostsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly PostsService _postsService;
-        public PostsController(ApplicationDbContext context, PostsService postsService)
+        public PostsController(PostsService postsService)
         {
-            _context = context;
             _postsService = postsService;
         }
 
@@ -32,26 +30,14 @@ namespace BlogPost.Areas.Users.Controllers
         {
             var curUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var model = await _context.Posts
-                            .Where(a => a.AuthorId == curUserID)
-                            .ToListAsync();
+            var model = _postsService.GetByAuthorId(curUserID);
             return View(model);
         }
 
         // GET: Users/User/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
-
             var post = _postsService.GetById(id.Value);
-
-            if (post == null)
-            {
-                return NotFound();
-            }
 
             return View(post);
         }
@@ -98,16 +84,8 @@ namespace BlogPost.Areas.Users.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
+            var post = _postsService.GetById(id.Value);
 
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
             return View(post);
         }
 
@@ -143,14 +121,7 @@ namespace BlogPost.Areas.Users.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PostExists(post.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -160,17 +131,7 @@ namespace BlogPost.Areas.Users.Controllers
         // GET: Users/User/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+            var post = _postsService.GetById(id.Value);
 
             return View(post);
         }
@@ -181,17 +142,14 @@ namespace BlogPost.Areas.Users.Controllers
 
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
+            var post = _postsService.GetById(id);
+
             if (post != null)
             {
                 _postsService.Delete(post);
             }
+  
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PostExists(int id)
-        {
-          return (_context.Posts?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

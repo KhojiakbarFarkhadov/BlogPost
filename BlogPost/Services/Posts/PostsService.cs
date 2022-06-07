@@ -1,5 +1,6 @@
 ﻿using BlogPost.Data;
 using BlogPost.Models;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogPost.Services
@@ -43,6 +44,17 @@ namespace BlogPost.Services
             _context.SaveChanges();
 
             return post;
+        }
+
+        public List<Post> GetAllApproved(string status)
+        {
+           return _context.Posts.Where(m => m.Status == "Approved").ToList();
+           
+        }
+
+        public List<Post> GetByAuthorId(string authorId)
+        {
+            return _context.Posts.Where(m => m.AuthorId == authorId).ToList();
         }
     }
 }

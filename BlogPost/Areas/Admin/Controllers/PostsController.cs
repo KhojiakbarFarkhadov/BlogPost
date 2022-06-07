@@ -48,21 +48,8 @@ namespace BlogPost.Areas.Admin.Controllers
         //[HttpPost]
         public async Task <IActionResult> Approve(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
-           
             var post = _adminPostsService.Approve(id.Value);
             
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            post.Status = "Approved";
-            await _context.SaveChangesAsync();
-
             return Ok();
         }
 
@@ -71,20 +58,7 @@ namespace BlogPost.Areas.Admin.Controllers
         //[HttpPost]
         public async Task<IActionResult> Reject(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
-            
             var post = _adminPostsService.Reject(id.Value);
-           
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            post.Status = "Rejected";
-            await _context.SaveChangesAsync();
 
             return Ok();
         }

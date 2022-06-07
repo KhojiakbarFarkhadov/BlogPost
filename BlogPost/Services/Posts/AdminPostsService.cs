@@ -11,7 +11,6 @@ namespace BlogPost.Services.Posts
         public AdminPostsService(ApplicationDbContext context)
         {
             _context = context;
-
         }
 
         public Post Approve(int id)
@@ -19,6 +18,8 @@ namespace BlogPost.Services.Posts
             var post = _context.Posts
                 .Include(p => p.Author)
                 .FirstOrDefault(m => m.Id == id);
+                 post.Status = "Approved";
+                _context.SaveChanges();
 
             return post;
         }
@@ -28,6 +29,8 @@ namespace BlogPost.Services.Posts
             var post = _context.Posts
                 .Include(p => p.Author)
                 .FirstOrDefault(m => m.Id == id);
+                 post.Status = "Rejected";
+                 _context.SaveChanges();
 
             return post;
         }

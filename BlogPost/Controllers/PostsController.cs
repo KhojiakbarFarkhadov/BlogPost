@@ -16,12 +16,10 @@ namespace BlogPost.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly PostsService _postsService;
 
-        public PostsController(ApplicationDbContext context, PostsService postsService)
+        public PostsController(PostsService postsService)
         {
-            _context = context;
             _postsService = postsService;
         }
 
@@ -30,27 +28,14 @@ namespace BlogPost.Controllers
         {
             var curUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var model = await _context.Posts
-                            .Where(a => a.AuthorId == curUserID)
-                            .ToListAsync();
+            var model = _postsService.GetAllApproved(curUserID);
             return View(model);
         }
 
         // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
-
             var post = _postsService.GetById(id.Value);
-
-            if (post == null)
-            {
-                return NotFound();
-            }
-
             return View(post);
         }
     }
