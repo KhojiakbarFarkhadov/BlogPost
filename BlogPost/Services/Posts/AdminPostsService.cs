@@ -13,22 +13,20 @@ namespace BlogPost.Services.Posts
             _context = context;
         }
 
-        public Post Approve(int id)
+        public Post Approve(Post post)
         {
-            var post = _context.Posts
-                .Include(p => p.Author)
-                .FirstOrDefault(m => m.Id == id);
+            _context.Posts
+                .Include(p => p.Author);
                  post.Status = "Approved";
                 _context.SaveChanges();
-
+           
             return post;
         }
 
-        public Post Reject(int? id)
+        public Post Reject(Post post)
         {
-            var post = _context.Posts
-                .Include(p => p.Author)
-                .FirstOrDefault(m => m.Id == id);
+            _context.Posts
+                .Include(p => p.Author);
                  post.Status = "Rejected";
                  _context.SaveChanges();
 

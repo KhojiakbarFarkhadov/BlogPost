@@ -38,7 +38,12 @@ namespace BlogPost.Areas.Admin.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var post = _postsService.GetById(id.Value);
-
+            
+            if (post == null)
+            {
+                return NotFound();
+            }
+            
             return View(post);
         }
 
@@ -46,7 +51,14 @@ namespace BlogPost.Areas.Admin.Controllers
         //[HttpPost]
         public async Task <IActionResult> Approve(int? id)
         {
-            var post = _adminPostsService.Approve(id.Value);
+            var post = _postsService.GetById(id.Value);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post = _adminPostsService.Approve(post);
             
             return Ok();
         }
@@ -56,7 +68,14 @@ namespace BlogPost.Areas.Admin.Controllers
         //[HttpPost]
         public async Task<IActionResult> Reject(int? id)
         {
-            var post = _adminPostsService.Reject(id.Value);
+            var post = _postsService.GetById(id.Value);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post = _adminPostsService.Reject(post);
 
             return Ok();
         }

@@ -46,7 +46,7 @@ namespace BlogPost.Services
             return post;
         }
 
-        public List<Post> GetAllApproved(string status)
+        public List<Post> GetAllApproved()
         {
            return _context.Posts.Where(m => m.Status == "Approved").ToList();
            

@@ -26,9 +26,13 @@ namespace BlogPost.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            var curUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var model = _postsService.GetAllApproved();
+            
+            if (model == null)
+            {
+                return NotFound();
+            }
 
-            var model = _postsService.GetAllApproved(curUserID);
             return View(model);
         }
 
@@ -36,6 +40,12 @@ namespace BlogPost.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var post = _postsService.GetById(id.Value);
+            
+            if (post == null)
+            {
+                return NotFound();
+            }
+
             return View(post);
         }
     }
