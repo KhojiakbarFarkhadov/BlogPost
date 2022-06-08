@@ -17,13 +17,11 @@ namespace BlogPost.Areas.Admin.Controllers
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly PostsService _postsService;
         private readonly AdminPostsService _adminPostsService;
 
-         public AdminController(ApplicationDbContext context, PostsService postsService, AdminPostsService adminPostsService)
+         public AdminController(PostsService postsService, AdminPostsService adminPostsService)
         {
-            _context = context;
             _postsService = postsService;
             _adminPostsService = adminPostsService;
         }
@@ -32,8 +30,8 @@ namespace BlogPost.Areas.Admin.Controllers
         // GET: Admin/Admin
         public async Task<IActionResult> Index()
         {
-            var posts = _context.Posts.Include(p => p.Author);
-            return View(await posts.ToListAsync());
+            var posts = _adminPostsService.GetForAdmin();
+            return View(posts);
         }
 
         // GET: Admin/Posts/Details/5

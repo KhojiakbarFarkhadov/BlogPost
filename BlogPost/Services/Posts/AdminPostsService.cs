@@ -34,5 +34,12 @@ namespace BlogPost.Services.Posts
 
             return post;
         }
+
+        public List<Post> GetForAdmin()
+        {
+            return _context.Posts
+                        .Include(p => p.Author)
+                        .Where(m => m.Status == "Waiting for approval").ToList();
+        }
     }
 }
