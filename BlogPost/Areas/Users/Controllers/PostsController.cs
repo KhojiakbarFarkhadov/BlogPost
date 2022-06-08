@@ -31,6 +31,12 @@ namespace BlogPost.Areas.Users.Controllers
             var curUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var model = _postsService.GetByAuthorId(curUserID);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
             return View(model);
         }
 
@@ -38,6 +44,11 @@ namespace BlogPost.Areas.Users.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var post = _postsService.GetById(id.Value);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
 
             return View(post);
         }
@@ -86,6 +97,11 @@ namespace BlogPost.Areas.Users.Controllers
         {
             var post = _postsService.GetById(id.Value);
 
+            if (post == null)
+            {
+                return NotFound();
+            }
+
             return View(post);
         }
 
@@ -132,6 +148,11 @@ namespace BlogPost.Areas.Users.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             var post = _postsService.GetById(id.Value);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
 
             return View(post);
         }
