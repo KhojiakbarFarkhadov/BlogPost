@@ -11,6 +11,7 @@ using BlogPost.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using BlogPost.Services;
 
 namespace BlogPost.Areas.Users.Controllers
 {
@@ -18,34 +19,32 @@ namespace BlogPost.Areas.Users.Controllers
     [Authorize(Roles = "User")]
     public class PostsController : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public PostsController(ApplicationDbContext context)
+        private readonly PostsService _postsService;
+        public PostsController(PostsService postsService)
         {
-            _context = context;
+            _postsService = postsService;
         }
-        
+
         // GET: Users/User
         public async Task<IActionResult> Index()
         {
             var curUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var model = await _context.Posts
-                            .Where(a => a.AuthorId == curUserID)
-                            .ToListAsync();
+            var model = _postsService.GetByAuthorId(curUserID);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
             return View(model);
         }
 
         // GET: Users/User/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
+            var post = _postsService.GetById(id.Value);
 
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
                 return NotFound();
@@ -84,9 +83,8 @@ namespace BlogPost.Areas.Users.Controllers
                 {
                     post.Status = "Waiting for approval";
                 }
-              
-                _context.Add(post);
-                await _context.SaveChangesAsync();
+
+                _postsService.Create(post);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -97,16 +95,13 @@ namespace BlogPost.Areas.Users.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
+            var post = _postsService.GetById(id.Value);
 
-            var post = await _context.Posts.FindAsync(id);
             if (post == null)
             {
                 return NotFound();
             }
+
             return View(post);
         }
 
@@ -138,19 +133,11 @@ namespace BlogPost.Areas.Users.Controllers
                 }
                 try
                 {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();  
+                    _postsService.Edit(post);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PostExists(post.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -160,13 +147,8 @@ namespace BlogPost.Areas.Users.Controllers
         // GET: Users/User/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
+            var post = _postsService.GetById(id.Value);
 
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
                 return NotFound();
@@ -181,23 +163,14 @@ namespace BlogPost.Areas.Users.Controllers
 
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Posts == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
-            }
-            var post = await _context.Posts.FindAsync(id);
+            var post = _postsService.GetById(id);
+
             if (post != null)
             {
-                _context.Posts.Remove(post);
+                _postsService.Delete(post);
             }
-            
-            await _context.SaveChangesAsync();
+  
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PostExists(int id)
-        {
-          return (_context.Posts?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
