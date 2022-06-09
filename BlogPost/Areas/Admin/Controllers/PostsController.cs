@@ -9,7 +9,7 @@ using BlogPost.Data;
 using BlogPost.Models;
 using Microsoft.AspNetCore.Authorization;
 using BlogPost.Services;
-using BlogPost.Services.Posts;
+using BlogPost.Services.Interfaces;
 
 namespace BlogPost.Areas.Admin.Controllers
 {
@@ -17,10 +17,10 @@ namespace BlogPost.Areas.Admin.Controllers
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
-        private readonly PostsService _postsService;
-        private readonly AdminPostsService _adminPostsService;
+        private readonly IPostsService _postsService;
+        private readonly IAdminPostsService _adminPostsService;
 
-         public AdminController(PostsService postsService, AdminPostsService adminPostsService)
+         public AdminController(IPostsService postsService, IAdminPostsService adminPostsService)
         {
             _postsService = postsService;
             _adminPostsService = adminPostsService;

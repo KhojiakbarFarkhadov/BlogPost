@@ -1,10 +1,11 @@
 ﻿using BlogPost.Data;
 using BlogPost.Models;
+using BlogPost.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogPost.Services.Posts
 {
-    public class AdminPostsService
+    public class AdminPostsService : IAdminPostsService
     {
         private readonly ApplicationDbContext _context;
 

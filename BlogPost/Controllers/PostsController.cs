@@ -11,14 +11,15 @@ using Microsoft.AspNetCore.Authorization;
 using BlogPost.ViewModels;
 using System.Security.Claims;
 using BlogPost.Services;
+using BlogPost.Services.Interfaces;
 
 namespace BlogPost.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly PostsService _postsService;
+        private readonly IPostsService _postsService;
 
-        public PostsController(PostsService postsService)
+        public PostsController(IPostsService postsService)
         {
             _postsService = postsService;
         }
