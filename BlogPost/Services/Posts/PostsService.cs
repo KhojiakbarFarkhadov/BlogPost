@@ -2,10 +2,11 @@
 using BlogPost.Models;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using BlogPost.Services.Interfaces;
 
 namespace BlogPost.Services
 {
-    public class PostsService
+    public class PostsService : IPostsService
     {
         private readonly ApplicationDbContext _context;
 

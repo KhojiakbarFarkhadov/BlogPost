@@ -11,7 +11,7 @@ using BlogPost.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using BlogPost.Services;
+using BlogPost.Services.Interfaces;
 
 namespace BlogPost.Areas.Users.Controllers
 {
@@ -19,8 +19,8 @@ namespace BlogPost.Areas.Users.Controllers
     [Authorize(Roles = "User")]
     public class PostsController : Controller
     {
-        private readonly PostsService _postsService;
-        public PostsController(PostsService postsService)
+        private readonly IPostsService _postsService;
+        public PostsController(IPostsService postsService)
         {
             _postsService = postsService;
         }
