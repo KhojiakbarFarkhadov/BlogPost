@@ -19,10 +19,10 @@ namespace BlogPost.Areas.Users.Controllers
     [Authorize(Roles = "User")]
     public class PostsController : Controller
     {
-        private readonly IPostsService _postsService;
-        public PostsController(IPostsService postsService)
+        private readonly IUserPostsService _userPostsService;
+        public PostsController(IUserPostsService userPostsService)
         {
-            _postsService = postsService;
+            _userPostsService = userPostsService;
         }
 
         // GET: Users/User
@@ -30,8 +30,8 @@ namespace BlogPost.Areas.Users.Controllers
         {
             var curUserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var model = _postsService.GetByAuthorId(curUserID);
-
+            var model = _userPostsService.GetByAuthorId(curUserID);
+            
             if (model == null)
             {
                 return NotFound();
@@ -43,11 +43,17 @@ namespace BlogPost.Areas.Users.Controllers
         // GET: Users/User/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var post = _postsService.GetById(id.Value);
+            var post = _userPostsService.GetById(id.Value);
 
             if (post == null)
             {
                 return NotFound();
+            }
+
+            var curUserID = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (post.AuthorId != curUserID)
+            {
+                return BadRequest("You are not allowed to see the others posts!!!");
             }
 
             return View(post);
@@ -84,7 +90,7 @@ namespace BlogPost.Areas.Users.Controllers
                     post.Status = "Waiting for approval";
                 }
 
-                _postsService.Create(post);
+                _userPostsService.Create(post);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -95,7 +101,7 @@ namespace BlogPost.Areas.Users.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            var post = _postsService.GetById(id.Value);
+            var post = _userPostsService.GetById(id.Value);
 
             if (post == null)
             {
@@ -133,7 +139,7 @@ namespace BlogPost.Areas.Users.Controllers
                 }
                 try
                 {
-                    _postsService.Edit(post);
+                    _userPostsService.Edit(post);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -147,7 +153,7 @@ namespace BlogPost.Areas.Users.Controllers
         // GET: Users/User/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            var post = _postsService.GetById(id.Value);
+            var post = _userPostsService.GetById(id.Value);
 
             if (post == null)
             {
@@ -163,11 +169,11 @@ namespace BlogPost.Areas.Users.Controllers
 
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var post = _postsService.GetById(id);
+            var post = _userPostsService.GetById(id);
 
             if (post != null)
             {
-                _postsService.Delete(post);
+                _userPostsService.Delete(post);
             }
   
             return RedirectToAction(nameof(Index));

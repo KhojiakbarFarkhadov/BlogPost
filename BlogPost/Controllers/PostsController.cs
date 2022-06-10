@@ -17,17 +17,17 @@ namespace BlogPost.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly IPostsService _postsService;
+        private readonly IBlogPostsService _blogPostsService;
 
-        public PostsController(IPostsService postsService)
+        public PostsController(IBlogPostsService blogPostsService)
         {
-            _postsService = postsService;
+            _blogPostsService = blogPostsService;
         }
 
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            var model = _postsService.GetAllApproved();
+            var model = _blogPostsService.GetAllApproved();
             
             if (model == null)
             {
@@ -40,7 +40,7 @@ namespace BlogPost.Controllers
         // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var post = _postsService.GetById(id.Value);
+            var post = _blogPostsService.GetApprovedById(id.Value);
             
             if (post == null)
             {
