@@ -4,25 +4,22 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using BlogPost.Services.Interfaces;
 
-namespace BlogPost.Services
+namespace BlogPost.Services.Posts
 {
-    public class PostsService : IPostsService
+    public class UserPostsService : BasePostsService, IUserPostsService
     {
-        private readonly ApplicationDbContext _context;
-
-        public PostsService(ApplicationDbContext context)
+        public UserPostsService(ApplicationDbContext context)
+            : base(context)
         {
-            _context = context;
         }
 
-        public Post GetById(int id)
-        {
+        //public Post GetById(int id)
+        //{
+        //    var post = _context.Posts
+        //      .FirstOrDefault(m => m.Id == id);
 
-            var post = _context.Posts
-              .FirstOrDefault(m => m.Id == id);
-
-            return post;
-        }
+        //    return post;
+        //}
         public Post Delete(Post post)
         {
              _context.Posts.Remove(post);
@@ -45,12 +42,6 @@ namespace BlogPost.Services
             _context.SaveChanges();
 
             return post;
-        }
-
-        public List<Post> GetAllApproved()
-        {
-           return _context.Posts.Where(m => m.Status == "Approved").ToList();
-           
         }
 
         public List<Post> GetByAuthorId(string authorId)

@@ -6,7 +6,7 @@ namespace BlogPost.Services.Interfaces
     {
         Post Approve(Post post);
         Post Reject(Post post);
-        List<Post> GetForAdmin();
-
+        List<Post> GetAll();
+        Post GetById(int id);
     }
 }

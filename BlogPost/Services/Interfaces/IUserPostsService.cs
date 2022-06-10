@@ -2,10 +2,8 @@
 
 namespace BlogPost.Services.Interfaces
 {
-    public interface IPostsService
+    public interface IUserPostsService
     {
-        List<Post> GetAllApproved();
-
         Post GetById(int id);
 
         Post Delete(Post post);

@@ -17,27 +17,24 @@ namespace BlogPost.Areas.Admin.Controllers
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
-        private readonly IPostsService _postsService;
         private readonly IAdminPostsService _adminPostsService;
 
-         public AdminController(IPostsService postsService, IAdminPostsService adminPostsService)
+         public AdminController(IAdminPostsService adminPostsService)
         {
-            _postsService = postsService;
             _adminPostsService = adminPostsService;
         }
-
 
         // GET: Admin/Admin
         public async Task<IActionResult> Index()
         {
-            var posts = _adminPostsService.GetForAdmin();
+            var posts = _adminPostsService.GetAll();
             return View(posts);
         }
 
         // GET: Admin/Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var post = _postsService.GetById(id.Value);
+            var post = _adminPostsService.GetById(id.Value);
             
             if (post == null)
             {
@@ -51,7 +48,7 @@ namespace BlogPost.Areas.Admin.Controllers
         //[HttpPost]
         public async Task <IActionResult> Approve(int? id)
         {
-            var post = _postsService.GetById(id.Value);
+            var post = _adminPostsService.GetById(id.Value);
 
             if (post == null)
             {
@@ -68,7 +65,7 @@ namespace BlogPost.Areas.Admin.Controllers
         //[HttpPost]
         public async Task<IActionResult> Reject(int? id)
         {
-            var post = _postsService.GetById(id.Value);
+            var post = _adminPostsService.GetById(id.Value);
 
             if (post == null)
             {

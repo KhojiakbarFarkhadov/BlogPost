@@ -5,14 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlogPost.Services.Posts
 {
-    public class AdminPostsService : IAdminPostsService
+    public class AdminPostsService : BasePostsService, IAdminPostsService
     {
-        private readonly ApplicationDbContext _context;
-
-        public AdminPostsService(ApplicationDbContext context)
+        public AdminPostsService(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
+
+        //public Post GetById(int id)
+        //{
+        //    var post = _context.Posts
+        //      .FirstOrDefault(m => m.Id == id);
+
+        //    return post;
+        //}
 
         public Post Approve(Post post)
         {
@@ -34,7 +39,7 @@ namespace BlogPost.Services.Posts
             return post;
         }
 
-        public List<Post> GetForAdmin()
+        public List<Post> GetAll()
         {
             return _context.Posts
                         .Include(p => p.Author)
