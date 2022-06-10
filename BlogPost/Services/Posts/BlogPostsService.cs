@@ -10,16 +10,18 @@ namespace BlogPost.Services.Posts
         {
         }
 
-        //public Post GetById(int id)
-        //{
-        //    var post = _context.Posts
-        //      .FirstOrDefault(m => m.Id == id);
-
-        //    return post;
-        //}
         public List<Post> GetAllApproved()
         {
             return _context.Posts.Where(m => m.Status == "Approved").ToList();
+        }
+
+        public Post GetApprovedById(int id)
+        {
+            var post = _context.Posts
+            .Where(m => m.Status == "Approved")
+            .FirstOrDefault(m => m.Id == id);
+
+            return post;
         }
     }
 }

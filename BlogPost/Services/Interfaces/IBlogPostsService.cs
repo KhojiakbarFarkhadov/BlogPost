@@ -2,10 +2,9 @@
 
 namespace BlogPost.Services.Interfaces
 {
-    public interface IBlogPostsService
+    public interface IBlogPostsService : IBasePostsService
     {
-        Post GetById(int id);
-
         List<Post> GetAllApproved();
+        Post GetApprovedById(int id);
     }
 }

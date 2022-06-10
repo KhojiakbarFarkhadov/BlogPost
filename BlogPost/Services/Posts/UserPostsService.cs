@@ -13,13 +13,6 @@ namespace BlogPost.Services.Posts
         {
         }
 
-        //public Post GetById(int id)
-        //{
-        //    var post = _context.Posts
-        //      .FirstOrDefault(m => m.Id == id);
-
-        //    return post;
-        //}
         public Post Delete(Post post)
         {
              _context.Posts.Remove(post);

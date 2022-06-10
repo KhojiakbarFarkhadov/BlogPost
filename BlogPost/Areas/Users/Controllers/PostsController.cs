@@ -50,6 +50,12 @@ namespace BlogPost.Areas.Users.Controllers
                 return NotFound();
             }
 
+            var curUserID = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (post.AuthorId != curUserID)
+            {
+                return BadRequest("You are not allowed to see the others posts!!!");
+            }
+
             return View(post);
         }
 

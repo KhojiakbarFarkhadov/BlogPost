@@ -40,7 +40,7 @@ namespace BlogPost.Controllers
         // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var post = _blogPostsService.GetById(id.Value);
+            var post = _blogPostsService.GetApprovedById(id.Value);
             
             if (post == null)
             {

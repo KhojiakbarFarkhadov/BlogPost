@@ -1,9 +1,10 @@
 ﻿using BlogPost.Data;
 using BlogPost.Models;
+using BlogPost.Services.Interfaces;
 
 namespace BlogPost.Services.Posts
 {
-    public class BasePostsService
+    public class BasePostsService : IBasePostsService
     {
         protected readonly ApplicationDbContext _context;
 

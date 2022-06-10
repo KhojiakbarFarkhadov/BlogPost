@@ -2,10 +2,8 @@
 
 namespace BlogPost.Services.Interfaces
 {
-    public interface IUserPostsService
+    public interface IUserPostsService : IBasePostsService
     {
-        Post GetById(int id);
-
         Post Delete(Post post);
 
         Post Create(Post post);
